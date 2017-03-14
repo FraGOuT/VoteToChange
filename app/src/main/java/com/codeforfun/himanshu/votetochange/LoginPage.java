@@ -19,7 +19,6 @@ public class LoginPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
 
-
         //Initialize all the variables
         mUsernameInput = (EditText) findViewById(R.id.usernameInput);
         mPasswordInput = (EditText) findViewById(R.id.passwordInput);
@@ -54,7 +53,7 @@ public class LoginPage extends AppCompatActivity {
         username = mUsernameInput.getText().toString();
         password = mPasswordInput.getText().toString();
 
-        Toast.makeText(this, "Hello..world", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Helllllo..world", Toast.LENGTH_SHORT).show();
 
 
 
