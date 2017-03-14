@@ -54,6 +54,9 @@ public class LoginPage extends AppCompatActivity {
         username = mUsernameInput.getText().toString();
         password = mPasswordInput.getText().toString();
 
+        Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show();
+
+
 
         //Make sure that the username and password are valid.
         if(!isUsernameValid(username) || !isPasswordValid(password)){
