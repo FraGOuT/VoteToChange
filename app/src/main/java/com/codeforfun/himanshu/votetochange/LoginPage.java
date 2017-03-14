@@ -1,5 +1,6 @@
 package com.codeforfun.himanshu.votetochange;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -53,7 +54,7 @@ public class LoginPage extends AppCompatActivity {
         username = mUsernameInput.getText().toString();
         password = mPasswordInput.getText().toString();
 
-        Toast.makeText(this, "Jayesh ka character Helllllo..world", Toast.LENGTH_SHORT).show();
+
 
 
 
@@ -62,12 +63,12 @@ public class LoginPage extends AppCompatActivity {
             Toast.makeText(this, "Input data is invalid", Toast.LENGTH_SHORT).show();
         }
 
-
+        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(i);
         //We need to execute a network call here to authenticate the username and password.
         //The result of the network call decides login success or failure.
 
     }
-
     /**
      * Make the UI changes for login failed.
      */
