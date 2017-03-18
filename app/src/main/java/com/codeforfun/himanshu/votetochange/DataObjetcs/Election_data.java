@@ -54,4 +54,5 @@ public class Election_data {
     public int getElectionId() {
         return electionId;
     }
+
 }
