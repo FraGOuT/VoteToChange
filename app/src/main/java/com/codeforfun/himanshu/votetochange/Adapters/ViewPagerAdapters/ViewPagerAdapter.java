@@ -1,4 +1,4 @@
-package com.codeforfun.himanshu.votetochange.Adapters;
+package com.codeforfun.himanshu.votetochange.Adapters.ViewPagerAdapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

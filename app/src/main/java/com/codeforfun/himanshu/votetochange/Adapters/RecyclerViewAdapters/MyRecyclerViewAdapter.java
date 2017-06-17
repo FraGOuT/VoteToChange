@@ -1,25 +1,24 @@
-package com.codeforfun.himanshu.votetochange.Adapters;
+package com.codeforfun.himanshu.votetochange.Adapters.RecyclerViewAdapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.codeforfun.himanshu.votetochange.DataObjetcs.Election_data;
+import com.codeforfun.himanshu.votetochange.AppConstants;
+import com.codeforfun.himanshu.votetochange.DataObjetcs.ElectionData;
 import com.codeforfun.himanshu.votetochange.R;
 
 import java.util.List;
 
-/**
- * Created by JAYESH WALAVALKAR on 18/03/2017.
- */
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
 
-    List<Election_data> list;
+    private List<ElectionData> list;
 
-    public MyRecyclerViewAdapter(List<Election_data> list) {
+    public MyRecyclerViewAdapter(List<ElectionData> list) {
         this.list = list;
     }
 
@@ -32,16 +31,16 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     @Override
     public void onBindViewHolder(MyRecyclerViewAdapter.ViewHolder holder, int position) {
 
-        Election_data data = list.get(position);
+        ElectionData data = list.get(position);
 
-        holder.voteCount.setText(data.getVoteCount());
-        holder.startDate.setText(data.getStartDate());
+        holder.voteCount.setText(holder.voteCount.getText()+""+data.getVoteCount());
+        holder.startDate.setText(holder.startDate.getText()+""+data.getStartDate());
         holder.electionName.setText(data.getElectionName());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return list==null?0:list.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

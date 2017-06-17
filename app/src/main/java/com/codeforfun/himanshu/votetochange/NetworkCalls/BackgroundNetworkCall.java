@@ -3,7 +3,9 @@ package com.codeforfun.himanshu.votetochange.NetworkCalls;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
+import com.codeforfun.himanshu.votetochange.AppConstants;
 import com.codeforfun.himanshu.votetochange.NetworkHelper.Encode;
 import com.codeforfun.himanshu.votetochange.NetworkHelper.IncorrectEncodingData;
 
@@ -15,7 +17,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -26,7 +27,7 @@ import java.util.concurrent.ExecutionException;
 
 public class BackgroundNetworkCall {
 
-    public Context mContext;
+    private Context mContext;
 
     public String execute(String URL , List<String> queryData, Context c) throws ExecutionException, InterruptedException {
         mContext = c;
@@ -44,10 +45,10 @@ public class BackgroundNetworkCall {
 
 class BackgroundCall extends AsyncTask<String,Void,String>{
 
-    Context context;
-    ProgressDialog progressDialog;
+    private Context context;
+    private ProgressDialog progressDialog;
 
-    public BackgroundCall(Context context) {
+    BackgroundCall(Context context) {
         this.context = context;
     }
 
@@ -62,6 +63,7 @@ class BackgroundCall extends AsyncTask<String,Void,String>{
         HttpURLConnection httpURLConnection=null;
         try {
             URL url = new URL(args[0]);
+            Log.i(AppConstants.TAG,"Network call for url = "+args[0]+ ""+args[1]);
             httpURLConnection = (HttpURLConnection)url.openConnection();
             httpURLConnection.setRequestMethod("POST");
             httpURLConnection.setDoOutput(true);
@@ -71,9 +73,7 @@ class BackgroundCall extends AsyncTask<String,Void,String>{
             OutputStream outputStream = httpURLConnection.getOutputStream();
             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
 
-            String data = args[1];
-
-            bufferedWriter.write(data);
+            bufferedWriter.write(args[1]);
             bufferedWriter.flush();
             bufferedWriter.close();
             outputStream.close();
@@ -91,8 +91,6 @@ class BackgroundCall extends AsyncTask<String,Void,String>{
             inputStream.close();
             return  response;
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

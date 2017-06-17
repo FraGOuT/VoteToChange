@@ -4,14 +4,14 @@ package com.codeforfun.himanshu.votetochange.DataObjetcs;
  * Created by JAYESH WALAVALKAR on 18/03/2017.
  */
 
-public class Election_data {
+public class ElectionData {
     private String electionName;
     private String startDate;
     private int voteCount;
     private String electionStatus;
     private int electionId;
 
-    public Election_data() {
+    public ElectionData() {
     }
 
     public void setElectionName(String electionName) {

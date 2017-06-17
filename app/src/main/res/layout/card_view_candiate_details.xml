@@ -17,33 +17,19 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/electionName"
+            android:id="@+id/candidateName"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Election Name"
+            android:text="Candidate Name"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/candidateUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/startDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Start Date : " />
-
-            <TextView
-                android:id="@+id/voteCount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Votes : "
-                android:layout_weight="1"/>
-
-        </LinearLayout>
+            android:layout_weight="1"
+            android:text="Username" />
     </LinearLayout>
 
 </android.support.v7.widget.CardView>
