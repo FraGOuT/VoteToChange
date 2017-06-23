@@ -69,6 +69,7 @@ public class Home extends Fragment {
         //After that we need to check whether the user has already voted or not in that election.
 
 
+
         //We change the activity.
         //In the new activity we make a network call to get the list of candidates for that election.
         //Then the user can select any one of them and click vote.
