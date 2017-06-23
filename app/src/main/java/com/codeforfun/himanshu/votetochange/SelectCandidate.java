@@ -26,7 +26,7 @@ public class SelectCandidate extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerViewAdapter = new CandidateRecyclerViewAdapter(this, getCandidateData(), new OnClickToVote() {
             @Override
-            public void clickToVote(String username) {
+            public void clickToVote(String CandidateUsername) {
 
 
 

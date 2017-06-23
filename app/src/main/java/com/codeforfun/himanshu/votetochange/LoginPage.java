@@ -89,11 +89,7 @@ public class LoginPage extends AppCompatActivity {
                 //Login is Success;
                 Log.i(AppConstants.TAG,"Login success");
 
-                SharedPreferences preferences = getApplicationContext().getSharedPreferences("UserPrefs",MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString(AppConstants.SHARED_PREFS_USERNAME,username);
-                editor.putString(AppConstants.SHARED_PREFS_PASSWORD,password);
-                editor.apply();
+                saveUserCredentials(username,password);
 
                 Intent i = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(i);
@@ -111,12 +107,28 @@ public class LoginPage extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
     /**
      * Make the UI changes for login failed.
      */
     private void notifyLoginFailed(){
         mPasswordInput.setText("");
         mLoginFailedNotice.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Save the username and password of the user in SharedPreferences
+     * @param username of the logged in user
+     * @param password of the logged in user
+     */
+    private void saveUserCredentials(String username, String password){
+
+        SharedPreferences preferences = getApplicationContext().getSharedPreferences("UserPrefs",MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(AppConstants.SHARED_PREFS_USERNAME,username);
+        editor.putString(AppConstants.SHARED_PREFS_PASSWORD,password);
+        editor.apply();
+
     }
 
 }

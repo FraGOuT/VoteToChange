@@ -42,7 +42,6 @@ public class CandidateRecyclerViewAdapter extends RecyclerView.Adapter<Candidate
         CandidateData candidateData = candidateList.get(position);
 
         holder.candidateName.setText(candidateData.getUsername());
-        holder.candidateUsername.setText(candidateData.getUsername());
     }
 
     @Override
@@ -52,17 +51,18 @@ public class CandidateRecyclerViewAdapter extends RecyclerView.Adapter<Candidate
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        TextView candidateName,candidateUsername;
+        String candidateUsername;
+        TextView candidateName;
+
         public ViewHolder(View itemView) {
             super(itemView);
 
             candidateName = (TextView) itemView.findViewById(R.id.candidateName);
-            candidateUsername = (TextView) itemView.findViewById(R.id.candidateUsername);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickToVote.clickToVote(candidateUsername.getText().toString());
+                    onClickToVote.clickToVote(candidateUsername);
                 }
             });
         }

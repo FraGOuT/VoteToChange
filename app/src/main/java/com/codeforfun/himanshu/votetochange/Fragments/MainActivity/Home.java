@@ -39,6 +39,20 @@ public class Home extends Fragment {
             }
         });
 
+
+        view.findViewById(R.id.registerACandidate).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Use a dialog box and take a name for the candidate.
+                //The name along with the username name should be registered with the server.
+
+                //After the registration of candidate completes notify the user.
+
+            }
+        });
+
+
         return view;
     }
 
@@ -53,11 +67,13 @@ public class Home extends Fragment {
             return;
 
         //Now we need to make a network call to check wether the entered key is valid or not.
-        //After that we need to check wether the user has already voted or not.
+        //After that we need to check whether the user has already voted or not in that election.
 
 
-        //If the user has already not voted then we need to get the candidate list.
-        //We change the activity after that.
+        //We change the activity.
+        //In the new activity we make a network call to get the list of candidates for that election.
+        //Then the user can select any one of them and click vote.
+
 
     }
 
