@@ -13,9 +13,6 @@ import android.widget.EditText;
 import com.codeforfun.himanshu.votetochange.R;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class Home extends Fragment {
 
     private String mElectionKey = null;
@@ -23,7 +20,6 @@ public class Home extends Fragment {
     public Home() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -102,7 +98,4 @@ public class Home extends Fragment {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
-
-
-
 }
