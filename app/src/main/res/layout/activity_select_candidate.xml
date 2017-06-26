@@ -12,7 +12,7 @@
         android:id="@+id/loadingView"
         android:orientation="vertical"
         android:layout_centerVertical="true">
-        <ProgressBar
+        <!--<ProgressBar
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_gravity="center"/>
@@ -24,7 +24,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold"
             android:gravity="center"
-            />
+            />-->
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

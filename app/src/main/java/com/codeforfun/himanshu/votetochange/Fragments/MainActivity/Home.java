@@ -2,6 +2,7 @@ package com.codeforfun.himanshu.votetochange.Fragments.MainActivity;
 
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -9,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.codeforfun.himanshu.votetochange.R;
+import com.codeforfun.himanshu.votetochange.SelectCandidate;
 
 
 public class Home extends Fragment {
@@ -65,6 +68,7 @@ public class Home extends Fragment {
         //After that we need to check whether the user has already voted or not in that election.
 
 
+
         //We change the activity.
         //In the new activity we make a network call to get the list of candidates for that election.
         //Then the user can select any one of them and click vote.
@@ -78,17 +82,30 @@ public class Home extends Fragment {
 
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_for_election_key_input,null);
         alertDialogBuilder.setView(dialogView);
-
+        alertDialogBuilder.setTitle("Vote");
         final EditText key = (EditText) dialogView.findViewById(R.id.electionKeyInput);
 
         alertDialogBuilder.setCancelable(true)
-                .setPositiveButton("", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mElectionKey = key.getText().toString();
+                        //Network Call
+                        //Check if key is present
+                        boolean result=true;//function
+                        if(result)
+                        {
+                            Intent i=new Intent(getContext(), SelectCandidate.class);
+                            i.putExtra("electionKey",mElectionKey);
+                            startActivity(i);
+                        }
+                        else
+                        {
+                            Toast.makeText(getContext(),"Invalid Key",Toast.LENGTH_SHORT);
+                        }
                     }
                 })
-                .setNegativeButton("", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();

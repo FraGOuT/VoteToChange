@@ -10,5 +10,5 @@ public class UrlData {
 
     public static final String LOGIN_URL = BASE_URL + "loginAuth.php";
     public static final String REGISTER_URL = BASE_URL + "registerUser.php";
-
+    public static final String REGISTER_ELECTION_URL =BASE_URL + "registerElection.php";
 }

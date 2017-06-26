@@ -10,6 +10,7 @@ public class ElectionData {
     private int voteCount;
     private String electionStatus;
     private int electionId;
+    private String electionDescription;
 
     public ElectionData() {
     }
@@ -34,6 +35,10 @@ public class ElectionData {
         this.electionId = electionId;
     }
 
+    public void setElectionDescription(String electionDescription) {
+        this.electionDescription = electionDescription;
+    }
+
     public String getElectionName() {
 
         return electionName;
@@ -55,4 +60,7 @@ public class ElectionData {
         return electionId;
     }
 
+    public String getElectionDescription() {
+        return electionDescription;
+    }
 }

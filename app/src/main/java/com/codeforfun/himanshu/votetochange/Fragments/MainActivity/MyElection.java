@@ -3,7 +3,10 @@ package com.codeforfun.himanshu.votetochange.Fragments.MainActivity;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,10 +21,18 @@ import android.widget.Toast;
 import com.codeforfun.himanshu.votetochange.Adapters.RecyclerViewAdapters.MyRecyclerViewAdapter;
 import com.codeforfun.himanshu.votetochange.AppConstants;
 import com.codeforfun.himanshu.votetochange.DataObjetcs.ElectionData;
+import com.codeforfun.himanshu.votetochange.ElectionDisplay;
+import com.codeforfun.himanshu.votetochange.MainActivity;
+import com.codeforfun.himanshu.votetochange.NetworkCalls.BackgroundNetworkCall;
+import com.codeforfun.himanshu.votetochange.NetworkHelper.UrlData;
 import com.codeforfun.himanshu.votetochange.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 
 
 public class MyElection extends Fragment {
@@ -32,6 +43,10 @@ public class MyElection extends Fragment {
     private MyRecyclerViewAdapter myRecyclerViewAdapter;
 
     private String mElectionName;
+    private String mCandidateKey;
+    private String mElectionKey;
+    private String mElectionDescription;
+    private List<ElectionData> election_data;
 
     public MyElection() {
         // Required empty public constructor
@@ -48,11 +63,14 @@ public class MyElection extends Fragment {
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.electionDataRecyclerView);
 
-        List<ElectionData> election_data = getData();
+        election_data = getData();
+        //get information from database
+
 
         myRecyclerViewAdapter = new MyRecyclerViewAdapter(election_data);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(myRecyclerViewAdapter);
+        mRecyclerView.setFocusable(false);
 
         view.findViewById(R.id.createElectionButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,21 +102,46 @@ public class MyElection extends Fragment {
     public void InputNewElectionName(){
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+        alertDialogBuilder.setTitle("Create new Election");
 
-        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_for_election_key_input,null);
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_for_creating_new_election,null);
         alertDialogBuilder.setView(dialogView);
 
         final EditText name = (EditText) dialogView.findViewById(R.id.electionKeyInput);
+        final EditText description =(EditText) dialogView.findViewById(R.id.electionDescription);
         name.setHint("Enter Election Name");
 
+
         alertDialogBuilder.setCancelable(true)
-                .setPositiveButton("", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mElectionName = name.getText().toString();
+                        mElectionDescription =description.getText().toString();
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                        String username = preferences.getString(AppConstants.SHARED_PREFS_USERNAME, "DEFAULT");
+
+                        boolean valid=true;
+                        //valid=sendingData(username,mElectionName,mElectionDescription);
+                        if(valid==true)
+                        {
+                            addData(mElectionName,mElectionDescription);
+
+                            Intent i = new Intent(getContext(), ElectionDisplay.class);
+                            i.putExtra("electionName",mElectionName);
+                            i.putExtra("candidateKey",mCandidateKey);
+                            i.putExtra("electionKey",mElectionName);
+
+                            startActivity(i);
+                        }
+                        else
+                        {
+
+                        }
+
                     }
                 })
-                .setNegativeButton("", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -109,6 +152,78 @@ public class MyElection extends Fragment {
         alertDialog.show();
     }
 
+    public String getCurrentDate()
+    {
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+        String formattedDate = df.format(c.getTime());
+        return formattedDate;
+    }
+
+    private boolean isUsernameValid(String username){
+        return username.length() > 0;
+    }
+
+    private boolean isElectionNameValid(String password){
+        return password.length() > 0;
+    }
+
+    public boolean sendingData(String username,String name,String description)
+    {
+        //Make sure that the username and password are valid.
+        if(!isUsernameValid(username) || !isElectionNameValid(name)){
+            Toast.makeText(getContext(), "Input data is invalid", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        List<String> queryData = new ArrayList<>();
+        queryData.add("username");
+        queryData.add(username);
+        queryData.add("election_name");
+        queryData.add(name);
+        queryData.add("description");
+        queryData.add(description);
+
+        try {
+            String electionResult = new BackgroundNetworkCall().execute(UrlData.REGISTER_ELECTION_URL,queryData,getContext());
+            Log.i(AppConstants.TAG,"Election Result = "+electionResult);
+            String resultarray[]=electionResult.split(" ");
+            Log.i(AppConstants.TAG,"Result array = "+resultarray[3]);
+
+            if(electionResult!=null && resultarray[3].equals("1") ){
+                //Login is Success;
+
+                mElectionKey=resultarray[0];
+                mCandidateKey=resultarray[1];
+                Log.i(AppConstants.TAG,"Election Created");
+
+                return true;
+            }
+            else{
+                //Login Failed
+                Toast.makeText(getContext(), "Network error", Toast.LENGTH_SHORT).show();
+                //notifyLoginFailed();
+                return false;
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void addData(String name,String description)
+    {
+        ElectionData data = new ElectionData();
+
+        data.setElectionName(name);
+        data.setStartDate(getCurrentDate());
+        data.setVoteCount(0);
+        data.setElectionDescription(description);
+
+        election_data.add(data);
+    }
 
     public List<ElectionData> getData(){
 
