@@ -4,13 +4,15 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="16dp">
     <EditText
         android:id="@+id/electionKeyInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:hint="Enter Election key">
+        android:hint="Enter Election key"
+        android:layout_margin="4dp"
+        android:layout_marginBottom="32dp">
         <requestFocus />
     </EditText>
 </LinearLayout>
