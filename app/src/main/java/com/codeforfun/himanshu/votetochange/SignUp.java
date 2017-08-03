@@ -3,11 +3,14 @@ package com.codeforfun.himanshu.votetochange;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codeforfun.himanshu.votetochange.NetworkCalls.BackgroundNetworkCall;
+import com.codeforfun.himanshu.votetochange.NetworkCalls.NetworkCall;
+import com.codeforfun.himanshu.votetochange.NetworkCalls.NetworkCallInterrface;
 import com.codeforfun.himanshu.votetochange.NetworkHelper.UrlData;
 
 import java.util.ArrayList;
@@ -49,24 +52,27 @@ public class SignUp extends AppCompatActivity {
         queryData.add("email");queryData.add(mEmail.getText().toString());
 
         String registrationStatus;
-        try {
-            registrationStatus = new BackgroundNetworkCall().execute(UrlData.REGISTER_URL,queryData,this);
-            if(registrationStatus!=null && registrationStatus.equals("1")){
-                //Registration is successful.
-                Toast.makeText(this,"Registration Complete",Toast.LENGTH_SHORT).show();
 
-                //Take the user to the login screen to login in the app.
-                Intent i = new Intent(getApplicationContext(), LoginPage.class);
-                startActivity(i);
-                finish();
+
+        NetworkCall.execute(this, UrlData.REGISTER_URL, queryData, "Signing You Up", new NetworkCallInterrface() {
+            @Override
+            public void onResultReturn(String result) {
+                Log.i(AppConstants.TAG,"Login Result = "+result);
+                if(result!=null && result.equals("1") ){//Login is Success;
+                    Log.i(AppConstants.TAG,"Login success");
+                    Toast.makeText(getApplicationContext(),"Registration Complete",Toast.LENGTH_SHORT).show();
+
+                    //Take the user to the login screen to login in the app.
+                    Intent i = new Intent(getApplicationContext(), LoginPage.class);
+                    startActivity(i);
+                    finish();
+                }
+                else{
+                    //Registration is failed.
+                    Toast.makeText(getApplicationContext(),"Error In Registration",Toast.LENGTH_SHORT).show();
+                }
             }
-            else{
-                //Registration is failed.
-                Toast.makeText(this,"Error In Registration",Toast.LENGTH_SHORT).show();
-            }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        });
     }
 
     public boolean checkTextViewData(TextView textView){

@@ -11,7 +11,7 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="Sign In"
+        android:label="Vote To Change"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity

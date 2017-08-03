@@ -185,7 +185,7 @@ public class MyElection extends Fragment {
         queryData.add(description);
 
         try {
-            String electionResult = new BackgroundNetworkCall().execute(UrlData.REGISTER_ELECTION_URL,queryData,getContext());
+            String electionResult = new BackgroundNetworkCall().execute(getContext(),UrlData.REGISTER_ELECTION_URL,queryData);
             Log.i(AppConstants.TAG,"Election Result = "+electionResult);
             String resultarray[]=electionResult.split(" ");
             Log.i(AppConstants.TAG,"Result array = "+resultarray[3]);

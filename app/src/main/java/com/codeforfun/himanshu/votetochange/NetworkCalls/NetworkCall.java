@@ -22,36 +22,38 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Created by Himanshu on 13-03-2017.
+ * Created by Himanshu on 12-07-2017.
  */
 
-public class BackgroundNetworkCall {
+public class NetworkCall {
 
-    public String execute(Context context, String URL , List<String> queryData) throws ExecutionException, InterruptedException {
-        String str = null;
+    public static void execute(Context context, String URL , List<String> queryData, String progressMessage, NetworkCallInterrface netCallInt){
         try {
-            str = new BackgroundCall(context).execute(URL, Encode.generateEncodedString(queryData)).get();
+            new Background(context, netCallInt, progressMessage).execute(URL, Encode.generateEncodedString(queryData));
         } catch (IncorrectEncodingData incorrectEncodingData) {
             incorrectEncodingData.printStackTrace();
         }
         //Toast.makeText(mContext, str, Toast.LENGTH_LONG).show();
-        return str;
     }
-
 }
 
-class BackgroundCall extends AsyncTask<String,Void,String>{
+class Background extends AsyncTask<String,Void,String> {
 
     private Context context;
     private ProgressDialog progressDialog;
+    private NetworkCallInterrface networkCallInterrface;
+    private String progressMessage;
 
-    BackgroundCall(Context context) {
+    Background(Context context, NetworkCallInterrface networkCallInterrface, String progressMessage) {
         this.context = context;
+        this.networkCallInterrface = networkCallInterrface;
+        this.progressMessage = progressMessage;
     }
 
     @Override
     protected void onPreExecute() {
         progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage(progressMessage);
         progressDialog.show();
 
         super.onPreExecute();
@@ -89,11 +91,11 @@ class BackgroundCall extends AsyncTask<String,Void,String>{
             bufferedWriter.close();
             inputStream.close();
 
-            try {
+            /*try {
                 Thread.sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
+            }*/
 
             return  response;
 
@@ -110,6 +112,7 @@ class BackgroundCall extends AsyncTask<String,Void,String>{
     @Override
     protected void onPostExecute(String s) {
         progressDialog.dismiss();
+        networkCallInterrface.onResultReturn(s);
         super.onPostExecute(s);
     }
 }

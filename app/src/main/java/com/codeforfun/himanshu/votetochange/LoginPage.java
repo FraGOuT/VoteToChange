@@ -6,22 +6,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.codeforfun.himanshu.votetochange.NetworkCalls.BackgroundNetworkCall;
+import com.codeforfun.himanshu.votetochange.NetworkCalls.NetworkCall;
+import com.codeforfun.himanshu.votetochange.NetworkCalls.NetworkCallInterrface;
 import com.codeforfun.himanshu.votetochange.NetworkHelper.UrlData;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class LoginPage extends AppCompatActivity {
 
     EditText mUsernameInput,mPasswordInput;
     TextView mLoginFailedNotice;
+
+    private String mUsername, mPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,32 +65,50 @@ public class LoginPage extends AppCompatActivity {
         //If it is login after failure we need erase the login failure message.
         mLoginFailedNotice.setVisibility(View.GONE);
 
-        String username,password;
-
-        username = mUsernameInput.getText().toString();
-        password = mPasswordInput.getText().toString();
+        mUsername = mUsernameInput.getText().toString();
+        mPassword = mPasswordInput.getText().toString();
 
 
-        //Make sure that the username and password are valid.
-        if(!isUsernameValid(username) || !isPasswordValid(password)){
+        //Make sure that the mUsername and mPassword are valid.
+        if(!isUsernameValid(mUsername) || !isPasswordValid(mPassword)){
             Toast.makeText(this, "Input data is invalid", Toast.LENGTH_SHORT).show();
             return;
         }
 
         List<String> queryData = new ArrayList<>();
         queryData.add("username");
-        queryData.add(username);
+        queryData.add(mUsername);
         queryData.add("password");
-        queryData.add(password);
+        queryData.add(mPassword);
 
-        try {
-            String loginResult = new BackgroundNetworkCall().execute(UrlData.LOGIN_URL,queryData,this);
+        NetworkCall.execute(this, UrlData.LOGIN_URL, queryData, "Signing In", new NetworkCallInterrface() {
+            @Override
+            public void onResultReturn(String result) {
+                Log.i(AppConstants.TAG,"Login Result = "+result);
+                if(result!=null && result.equals("1") ){//Login is Success;
+                    Log.i(AppConstants.TAG,"Login success");
+                    saveUserCredentials(mUsername, mPassword);
+                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(i);
+                    finish();
+                }
+                else{
+                    //Toast.makeText(this, "Username/Password is incorrect", Toast.LENGTH_SHORT).show();
+                    notifyLoginFailed();
+                    return;
+                }
+            }
+        });
+
+
+        /*try {
+            String loginResult = new BackgroundNetworkCall().execute(this,UrlData.LOGIN_URL,queryData);
             Log.i(AppConstants.TAG,"Login Result = "+loginResult);
             if(loginResult!=null && loginResult.equals("1") ){
                 //Login is Success;
                 Log.i(AppConstants.TAG,"Login success");
 
-                saveUserCredentials(username,password);
+                saveUserCredentials(mUsername,mPassword);
 
                 Intent i = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(i);
@@ -105,7 +124,7 @@ public class LoginPage extends AppCompatActivity {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     /**
@@ -117,7 +136,7 @@ public class LoginPage extends AppCompatActivity {
     }
 
     /**
-     * Save the username and password of the user in SharedPreferences
+     * Save the mUsername and mPassword of the user in SharedPreferences
      * @param username of the logged in user
      * @param password of the logged in user
      */
